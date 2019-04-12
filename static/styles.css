@@ -1,3 +1,6 @@
+input {
+	color: green;
+}
 body {
   display: flex;
   align-items: center;
@@ -5,5 +8,5 @@ body {
   font-family: "Raleway", sans-serif;
 }
 html {
-	background: black;
+	 background-color: lightgrey;
 }
