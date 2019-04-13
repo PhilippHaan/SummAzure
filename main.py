@@ -1,4 +1,5 @@
 from app import app
+from pipe import Pipe
 from flask import Flask, flash, request, redirect, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 import PyPDF2
@@ -37,24 +38,14 @@ def upload_file():
 			#return redirect('/')
 		else:
 			flash('Upload not possible')
-			return redirect('/summary')
+			return redirect('/')
 
 def summarize(PDFfile):
-    #return 'HI'
-    pdfReader = PyPDF2.PdfFileReader(PDFfile)
-    # ab hier TODO
-    pages = pdfReader.getNumPages()
-
-    whole_text = ''
-    for i in range(pages):
-        pageobj = pdfReader.getPage(i)
-        text = pageobj.extractText()
-        array = text.splitlines()
-        newstring = ''
-        for i in array:
-            newstring += i
-        whole_text += newstring
-    return whole_text
+    pipe = Pipe()
+	# converts PDFfile from upload and returns the text(string)
+    text = pipe.convert(PDFfile)
+    return text
 
 if __name__ == "__main__":
+    print("Version: 0.1")
     app.run(host='0.0.0.0')
