@@ -1,8 +1,7 @@
 from app import app
 from pipe import Pipe
-from flask import Flask, flash, request, redirect, render_template, send_from_directory
+from flask import Flask, flash, request, redirect, render_template, send_from_directory, send_file
 from werkzeug.utils import secure_filename
-import PyPDF2
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
 
@@ -32,10 +31,14 @@ def upload_file():
 			return redirect(request.url)
 		if file and allowed_file(file.filename):
 			filename = secure_filename(file.filename)
-			text = summarize(file)
-			return text
-			#flash('File successfully uploaded')
-			#return redirect('/')
+			nquestions = summarize(file)
+			print("Amount of questions: {}".format(nquestions))
+			server_answer = "Successfully generated {} Questions".format(nquestions)
+			flash(server_answer)
+			return send_file('output.apkg',
+                     attachment_filename='output.apkg',
+                     as_attachment=True)
+			return redirect('/')
 		else:
 			flash('Upload not possible')
 			return redirect('/')
@@ -47,5 +50,5 @@ def summarize(PDFfile):
     return text
 
 if __name__ == "__main__":
-    print("Version: 0.1")
+    print("Version: 0.5")
     app.run(host='0.0.0.0')

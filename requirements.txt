@@ -1,3 +1,7 @@
 Flask
 Werkzeug
-PyPDF2
+pysummarization
+pytesseract
+genanki
+requests
+pdf2image
