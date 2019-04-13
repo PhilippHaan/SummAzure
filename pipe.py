@@ -100,14 +100,13 @@ class Pipe:
                 question = '<p><h2>'
                 answer = '<p><h2>'
                 for i in e:
-                    if type(i['CorrectAnswer'])!=bool:
-                        question += i['QuestionPrompt']+'</p><p>'
-                        answer += i['CorrectAnswer']+'</p><p>'
-                    
-                        my_note = genanki.Note(
-                        model=my_model,
-                        fields=[question+'</h2></p>','<h2><p>'+df.sentence[index]+'</h2></p>'+"<p><h2>Answer: </p></h2>"+str(answer)+'</h2></p>'])
-                        my_deck.add_note(my_note)
+                    question += i['QuestionPrompt']+'</p><p>'
+                    answer += str(i['CorrectAnswer'])+'</p><p>'
+                
+                    my_note = genanki.Note(
+                    model=my_model,
+                    fields=[question+'</h2></p>','<h2><p>'+df.sentence[index]+'</h2></p>'+"<p><h2>Answer: </p></h2>"+str(answer)+'</h2></p>'])
+                    my_deck.add_note(my_note)
         genanki.Package(my_deck).write_to_file('output.apkg')
 
         length = 0
@@ -126,10 +125,15 @@ class Pipe:
             page = page.convert('1')
             text = pytesseract.image_to_string(page)
             textl.append(text)
+
+        # delete pages
+        del pages
         
         text = []
         for e in textl:
             text.append(self.preprocess(e))
         df_summary = self.summarization(text)
         n_questions = self.generateQuestions(df_summary)
+        del text
+        del df_summary
         return n_questions
